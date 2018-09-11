@@ -4,9 +4,12 @@ import re
 import os
 import unicodedata
 import math
+import json
 
 from django.utils import six
 from django.utils.module_loading import import_string
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from filebrowser.settings import STRICT_PIL, NORMALIZE_FILENAME, CONVERT_FILENAME
 from filebrowser.settings import VERSION_PROCESSORS
@@ -18,6 +21,29 @@ else:
         from PIL import Image
     except ImportError:
         import Image
+
+_json_script_escapes = {
+    ord('>'): '\\u003E',
+    ord('<'): '\\u003C',
+    ord('&'): '\\u0026',
+}
+
+
+def json_for_script(value):
+    """
+    Implementation of json_script from Django 2.1
+    https://github.com/django/django/commit/8c709d79cbd1a7bb975f58090c17a1178a0efb80
+
+    If get_file_extensions is a list of unicode characters, JavaScript is unable to handle it and it will break upload.html
+    This will convert a list of unicode characters into a regular list, mark it safe, and will escape allthe HTML/XML special
+    characters with their unicode escapes
+    """
+    from django.core.serializers.json import DjangoJSONEncoder
+    json_str = json.dumps(value, cls=DjangoJSONEncoder)
+    return format_html(
+        '{}',
+        mark_safe(json_str)
+    )
 
 
 def convert_filename(value):

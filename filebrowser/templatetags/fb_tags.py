@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from django import VERSION as DJANGO_VERSION
 from django import template
 from django.contrib.admin.templatetags.admin_static import static
@@ -8,7 +7,7 @@ from django.utils.http import urlquote
 from django.utils.safestring import mark_safe
 
 from filebrowser.settings import EXTENSIONS, SELECT_FORMATS
-
+from filebrowser.utils import json_for_script
 
 register = template.Library()
 
@@ -155,7 +154,7 @@ def get_file_extensions(qs):
             for item in v:
                 if item:
                     extensions.append(item)
-    return mark_safe(extensions)
+    return json_for_script(extensions)
 
 
 # Django 1.9 auto escapes simple_tag unless marked as safe
