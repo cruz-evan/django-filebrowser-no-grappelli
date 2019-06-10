@@ -8,6 +8,26 @@
 Changelog
 =========
 
+3.7.8 (Match 25th, 2019)
+------------------------
+
+* Fix Chinese locale language code to match the one in Django 1.9+
+
+3.7.7 (February 2nd, 2019)
+------------------------
+
+* Fix of the previous release removing dependency on six
+
+3.7.6 (February 1st, 2019)
+------------------------
+
+* Fix default value for FileBrowserField (thanks @carlosgeos for report)
+
+3.7.5 (September 12th, 2018)
+------------------------
+
+* Support for Django 2.1 (by @orbitvu)
+
 3.7.4 (January 27th, 2018)
 ------------------------
 

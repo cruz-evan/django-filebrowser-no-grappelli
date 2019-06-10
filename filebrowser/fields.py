@@ -1,6 +1,8 @@
 # coding: utf-8
 import os
 
+from django.utils.six import string_types
+
 from django import forms
 try:
     from django.urls import reverse
@@ -36,7 +38,7 @@ class FileBrowseWidget(Input):
             self.attrs = {}
         super(FileBrowseWidget, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         url = reverse(self.site.name + ":fb_browse")
         if value is None:
             value = ""
@@ -111,7 +113,7 @@ class FileBrowseField(CharField):
         return self.to_python(value)
 
     def get_prep_value(self, value):
-        if not value:
+        if not value or isinstance(value, string_types):
             return value
         return value.path
 
@@ -164,7 +166,7 @@ class FileBrowseUploadWidget(Input):
             self.attrs = {}
         super(FileBrowseUploadWidget, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         url = reverse(self.site.name + ":fb_browse")
         if value is None:
             value = ""
@@ -248,8 +250,8 @@ class FileBrowseUploadField(CharField):
             return value
         return FileObject(value, site=self.site)
 
-    def get_db_prep_value(self, value, connection, prepared=False):
-        if not value:
+    def get_prep_value(self, value):
+        if not value or isinstance(value, string_types):
             return value
         return value.path
 
